@@ -71,7 +71,6 @@ public class AlbumsActivity extends AppCompatActivity {
         });
 
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         if(item.getItemId() == android.R.id.home){
