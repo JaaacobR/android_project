@@ -82,6 +82,7 @@ public class AlbumsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int which) {
                         File toRemove = new File(pic, "RyszkaJakub/" + adapterView.getItemAtPosition(i).toString());
                         toRemove.delete();
+                        refreshDirectory(dir);
 
                     }
                 });
@@ -114,8 +115,9 @@ public class AlbumsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                        File dir = new File(pic, "RyszkaJakub/" +  input.getText());
-                        dir.mkdir();
+                        File dir1 = new File(pic, "RyszkaJakub/" +  input.getText());
+                        dir1.mkdir();
+                        refreshDirectory(dir);
 
 
                     }
