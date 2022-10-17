@@ -17,14 +17,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import android.os.Bundle;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,9 +115,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 200){
+            Log.d("qwerty", "asadfasfasdfasdf");
             if(resultCode == RESULT_OK){
                 Bundle extras = data.getExtras();
                 Bitmap b = (Bitmap) extras.get("data");
+
+            }
+        }else if(requestCode == 100){
+            if(resultCode == RESULT_OK){
+                Uri imgData = data.getData();
+                try {
+                    InputStream stream = getContentResolver().openInputStream(imgData);
+                    Bitmap b = BitmapFactory.decodeStream(stream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
