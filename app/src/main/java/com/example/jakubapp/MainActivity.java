@@ -1,14 +1,21 @@
 package com.example.jakubapp;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -25,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         cameraBtn = findViewById(R.id.buttonCamera);
         albumsBtn = findViewById(R.id.albumsBtn);
         albumsBtn.setOnClickListener(new View.OnClickListener() {
@@ -34,7 +42,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(intent.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(intent,200);
+
+
+                }
+            }
+        });
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
+        checkPermission(Manifest.permission.CAMERA, 100);
+
+
 
 
     }
