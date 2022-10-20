@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -114,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File dir = new File(pic, "RyszkaJakub");
+        String[] opcje = new String[dir.listFiles().length];
+        for(int i=0; i< dir.listFiles().length; i++){
+            opcje[i] = dir.listFiles()[i].getName();
+        }
         if(requestCode == 200){
             Log.d("qwerty", "asadfasfasdfasdf");
             if(resultCode == RESULT_OK){
