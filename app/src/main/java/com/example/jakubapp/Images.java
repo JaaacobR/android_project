@@ -45,16 +45,6 @@ public class Images extends AppCompatActivity {
             linearLayout.addView(img);
         }
 
-
-
-//        for(File file : dir.listFiles()){
-//            //String imagePath = file.getPath();
-//            //Bitmap bmp = betterImageDecode(imagePath);
-//            //ImageView img = new ImageView(Images.this);
-//            //img.setImageBitmap(bmp);
-//            //linearLayout.addView(img);
-//        }
-
     }
 
     private Bitmap betterImageDecode(String filePath){
