@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -142,7 +143,9 @@ public class AlbumsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("TAG", "Nr klikanego wiersza : " + i);
+                Intent intent = new Intent(AlbumsActivity.this, Images.class);
+                intent.putExtra("folder", adapterView.getItemAtPosition(i).toString());
+                startActivity(intent);
             }
         });
 

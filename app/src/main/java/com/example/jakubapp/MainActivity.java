@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
+
         checkPermission(Manifest.permission.CAMERA, 100);
 
 
