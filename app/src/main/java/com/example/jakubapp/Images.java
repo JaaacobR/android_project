@@ -3,11 +3,13 @@ package com.example.jakubapp;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -42,6 +44,14 @@ public class Images extends AppCompatActivity {
             ImageView img = new ImageView(Images.this);
             img.setImageBitmap(bmp);
             img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Images.this, Image.class);
+                    intent.putExtra("img" , imagePath);
+                    startActivity(intent);
+                }
+            });
             linearLayout.addView(img);
         }
 
