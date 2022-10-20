@@ -29,9 +29,14 @@ import android.widget.RelativeLayout;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,11 +127,36 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i< dir.listFiles().length; i++){
             opcje[i] = dir.listFiles()[i].getName();
         }
+
         if(requestCode == 200){
             Log.d("qwerty", "asadfasfasdfasdf");
             if(resultCode == RESULT_OK){
                 Bundle extras = data.getExtras();
                 Bitmap b = (Bitmap) extras.get("data");
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setTitle("Wybierz folder do zapisu?");
+                alert.setItems(opcje, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                        String d = df.format(new Date());
+                        FileOutputStream fs = null;
+                        try {
+                            fs = new FileOutputStream(dir.listFiles()[i].getPath() + "/" + d + ".jpg");
+                            fs.write(byteArray);
+                            fs.close();
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                alert.show();
 
             }
         }else if(requestCode == 100){
@@ -135,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     InputStream stream = getContentResolver().openInputStream(imgData);
                     Bitmap b = BitmapFactory.decodeStream(stream);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
