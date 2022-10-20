@@ -101,22 +101,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public void onRequestPermissionResult(int requestCode, @NonNull String[] Permissions, @NonNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, Permissions, grantResults);
-        switch (requestCode){
-            case 100:
-                if(grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //tak
-                } else {
-                    //nie
-                }
-                break;
-            case 101:
-                break;
-        }
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -165,6 +149,30 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     InputStream stream = getContentResolver().openInputStream(imgData);
                     Bitmap b = BitmapFactory.decodeStream(stream);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setTitle("Wybierz folder do zapisu?");
+                    alert.setItems(opcje, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                            String d = df.format(new Date());
+                            FileOutputStream fs = null;
+                            try {
+                                fs = new FileOutputStream(dir.listFiles()[i].getPath() + "/" + d + ".jpg");
+                                fs.write(byteArray);
+                                fs.close();
+
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    alert.show();
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
