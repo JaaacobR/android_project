@@ -47,9 +47,6 @@ public class AlbumsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_albums);
 
-
-
-
         File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File dir = new File(pic, "RyszkaJakub");
         dir.mkdir();
@@ -64,7 +61,6 @@ public class AlbumsActivity extends AppCompatActivity {
         for(File file : dir.listFiles()){
             Log.d("TAG", "Nr klikanego wiersza : " + file.toString());
         }
-
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -84,7 +80,6 @@ public class AlbumsActivity extends AppCompatActivity {
                         File toRemove = new File(pic, "RyszkaJakub/" + adapterView.getItemAtPosition(i).toString());
                         toRemove.delete();
                         refreshDirectory(dir);
-
                     }
                 });
                 alert.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
@@ -97,10 +92,6 @@ public class AlbumsActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
-
 
         addFolderBtn = findViewById(R.id.addButton);
         addFolderBtn.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +110,6 @@ public class AlbumsActivity extends AppCompatActivity {
                         File dir1 = new File(pic, "RyszkaJakub/" +  input.getText());
                         dir1.mkdir();
                         refreshDirectory(dir);
-
-
                     }
                 });
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -133,11 +122,7 @@ public class AlbumsActivity extends AppCompatActivity {
                 alert.show();
             }
 
-
         });
-
-
-
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

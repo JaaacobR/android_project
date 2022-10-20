@@ -24,8 +24,6 @@ public class Image extends AppCompatActivity {
 
         img.setImageBitmap(bmp);
         img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-
     }
 
     private Bitmap betterImageDecode(String filePath){

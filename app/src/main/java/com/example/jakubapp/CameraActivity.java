@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 
 public class CameraActivity extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -21,8 +19,6 @@ public class CameraActivity extends AppCompatActivity {
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-
-
     }
 
     @Override
