@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout cameraBtn;
     private RelativeLayout albumsBtn;
+    private RelativeLayout newAlbums;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         cameraBtn = findViewById(R.id.buttonCamera);
         albumsBtn = findViewById(R.id.albumsBtn);
+        newAlbums = findViewById(R.id.newAlbums);
+        newAlbums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Albums2Activity.class);
+                startActivity(intent);
+            }
+        });
         albumsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
