@@ -89,7 +89,7 @@ public class AlbumsActivity extends AppCompatActivity {
                     }
                 });
                 alert.show();
-                return false;
+                return true;
             }
         });
 
