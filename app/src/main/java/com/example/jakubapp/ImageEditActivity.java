@@ -19,6 +19,7 @@ public class ImageEditActivity extends AppCompatActivity {
         list.add("a");
         list.add("b");
 
+
         TestAdapter adapter = new TestAdapter(
                 ImageEditActivity.this,
                 R.layout.listviewedit,
