@@ -55,6 +55,7 @@ public class Images extends AppCompatActivity {
             });
             linearLayout.addView(img);
             img.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,400));
+
         }
 
     }
