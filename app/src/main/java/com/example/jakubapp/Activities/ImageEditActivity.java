@@ -1,8 +1,11 @@
-package com.example.jakubapp;
+package com.example.jakubapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.jakubapp.R;
+import com.example.jakubapp.TestAdapter;
 
 import java.util.ArrayList;
 

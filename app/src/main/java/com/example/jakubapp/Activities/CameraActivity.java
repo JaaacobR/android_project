@@ -1,4 +1,4 @@
-package com.example.jakubapp;
+package com.example.jakubapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -8,6 +8,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+
+import com.example.jakubapp.R;
 
 public class CameraActivity extends AppCompatActivity {
 

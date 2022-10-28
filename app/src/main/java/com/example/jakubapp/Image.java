@@ -1,10 +1,15 @@
 package com.example.jakubapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 public class Image extends AppCompatActivity {
@@ -24,6 +29,28 @@ public class Image extends AppCompatActivity {
 
         img.setImageBitmap(bmp);
         img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(Image.this);
+                View editView = View.inflate(Image.this, R.layout.note_input_xml, null);
+                alert.setView(editView);
+                Button bt1 = (Button) editView.findViewById(R.id.btnOK);
+                EditText et1 = (EditText) editView.findViewById(R.id.note1);
+                EditText et2 = (EditText) editView.findViewById(R.id.note2);
+
+                bt1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("aba" , et1.getText().toString());
+                        Log.d("aba" , et2.getText().toString());
+
+                    }
+                });
+                alert.show();
+            }
+        });
     }
 
     private Bitmap betterImageDecode(String filePath){

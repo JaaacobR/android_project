@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/purple_500"
-    tools:context=".AlbumsActivity">
+    tools:context=".Activities.AlbumsActivity">
 
     <ListView
         android:id="@+id/listViewID"

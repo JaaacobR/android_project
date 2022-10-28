@@ -1,4 +1,4 @@
-package com.example.jakubapp;
+package com.example.jakubapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.example.jakubapp.Images;
+import com.example.jakubapp.R;
 
 import java.io.File;
 
