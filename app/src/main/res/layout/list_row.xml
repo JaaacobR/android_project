@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@color/cardview_dark_background"
-    android:layout_height="match_parent">
-    <LinearLayout
+    android:layout_height="200dp">
+    <ImageView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/remove"
-            android:layout_width="wrap_content"
-            android:src="@drawable/baseline_photo_library_white_36"
-            android:layout_height="wrap_content">
+        android:id="@+id/image"
+        >
+    </ImageView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:id="@+id/del"
+        android:src="@drawable/baseline_auto_awesome_mosaic_white_36"
+        >
 
-        </ImageView>
-    </LinearLayout>
+    </ImageView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:id="@+id/edit"
+        android:src="@drawable/baseline_chevron_left_white_36"
+        >
 
+    </ImageView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:id="@+id/info"
+        android:src="@drawable/baseline_chevron_right_white_36"
+        >
+
+    </ImageView>
 
 </LinearLayout>
