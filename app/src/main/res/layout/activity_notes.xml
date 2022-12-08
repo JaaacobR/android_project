@@ -4,15 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_700"
-    android:orientation="vertical">
-
-
-
+    tools:context=".Activities.NotesActivity"
+    android:background="@color/purple_200">
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listview"
-        android:layout_weight="1"
-        />
+        android:id="@+id/lvnotes"/>
+
 </LinearLayout>

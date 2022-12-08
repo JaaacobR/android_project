@@ -131,8 +131,8 @@ public class Albums2Activity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(Albums2Activity.this, Images.class);
-                intent.putExtra("folder", adapterView.getItemAtPosition(i).toString());
+                Intent intent = new Intent(Albums2Activity.this, ImageEditActivity.class);
+                intent.putExtra("albumName", adapterView.getItemAtPosition(i).toString());
                 startActivity(intent);
             }
         });

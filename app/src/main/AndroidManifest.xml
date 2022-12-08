@@ -18,6 +18,20 @@
         android:theme="@style/Theme.JakubApp"
         tools:targetApi="31">
         <activity
+            android:name=".NotesActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Activities.NotesActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Activities.ImageEditActivity"
             android:exported="false">
             <meta-data

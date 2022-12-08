@@ -1,12 +1,16 @@
 package com.example.jakubapp;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +44,9 @@ public class TestAdapter extends ArrayAdapter {
         image.setImageURI(uri);
         image.setLayoutParams(new LinearLayout.LayoutParams(400,200));
 
-        ImageView iv1 = (ImageView) convertView.findViewById(R.id.del);
+        File tempFile = _list.get(position);
+
+        ImageView iv1 = (ImageView) convertView.findViewById(R.id.remove);
         iv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,9 +58,76 @@ public class TestAdapter extends ArrayAdapter {
         });
         ImageView iv2 = (ImageView) convertView.findViewById(R.id.edit);
         iv2.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
-                Log.d("XXX","edycja");
+                AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+                alert.setTitle("Uwaga!");
+                alert.setMessage("komunikat");
+
+                LinearLayout ll = new LinearLayout(_context);
+                ll.setOrientation(LinearLayout.VERTICAL);
+
+                EditText title = new EditText(_context);
+                title.setText("tytyl notatki");
+
+                EditText noteContent = new EditText(_context);
+                noteContent.setText("tresc notatki");
+
+                ll.addView(title);
+                ll.addView(noteContent);
+
+                alert.setView(ll);
+
+
+                final int[] selectedColor = {0xff000000};
+
+                int[] arr = new int[]{0xff0099ff, 0xffff5100, 0xffeb2f58, 0xffa841d1, 0xfff765d0, 0xff7fe3bd, 0xff2fa134, 0xff074f0a};
+                LinearLayout colors = new LinearLayout(_context);
+                colors.setOrientation(LinearLayout.HORIZONTAL);
+                for(int i :arr){
+                    ImageView x = new ImageView(_context);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+                    x.setLayoutParams(layoutParams);
+                    x.setBackgroundColor(i);
+                    colors.addView(x);
+                    x.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            selectedColor[0] = i;
+                            title.setTextColor(selectedColor[0]);
+                        }
+                    });
+                }
+                ll.addView(colors);
+
+//ok
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //wyświetl zmienną which
+
+                        DatabaseManager db = new DatabaseManager (
+                                _context, // activity z galerią zdjęć
+                                "NotatkiJakubRyszka2.db", // nazwa bazy
+                                null,
+                                3 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
+                        );
+
+                        int color = selectedColor[0];
+
+                        db.insertNote( Integer.toHexString(color), title.getText().toString(), noteContent.getText().toString(), tempFile.getPath());
+                    }
+
+                });
+
+//no
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //wyświetl which
+                    }
+                });
+//
+                alert.show();
             }
         });
         ImageView iv3 = (ImageView) convertView.findViewById(R.id.info);

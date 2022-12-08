@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout cameraBtn;
     private RelativeLayout albumsBtn;
     private RelativeLayout newAlbums;
+    private RelativeLayout notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         cameraBtn = findViewById(R.id.buttonCamera);
         albumsBtn = findViewById(R.id.albumsBtn);
         newAlbums = findViewById(R.id.newAlbums);
+        notes = findViewById(R.id.notes);
         newAlbums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this , AlbumsActivity.class);
+                startActivity(intent);
+            }
+        });
+        notes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this , NotesActivity.class);
                 startActivity(intent);
             }
         });
