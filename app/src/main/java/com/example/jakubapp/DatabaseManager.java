@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import java.util.Random;
 
 
 import androidx.annotation.Nullable;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS notesPhotos (color TEXT, title TEXT, noteContent TEXT, photopath TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS notesPhotos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, color TEXT, title TEXT, noteContent TEXT, photopath TEXT)");
     }
 
     public DatabaseManager(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -33,10 +32,8 @@ import java.util.ArrayList;
     public boolean insertNote(String color, String title, String noteContent, String photopath){
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("CREATE TABLE IF NOT EXISTS notesPhotos (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,color TEXT, title TEXT, noteContent TEXT, photopath TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS notesPhotos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,color TEXT, title TEXT, noteContent TEXT, photopath TEXT)");
         ContentValues contentValues = new ContentValues();
-
-
         contentValues.put("color", color);
         contentValues.put("title", title);
         contentValues.put("noteContent",noteContent );
@@ -47,35 +44,27 @@ import java.util.ArrayList;
         return true;
     }
 
-    public boolean editNote(int id, String color, String title, String noteContent, String photopath){
-
+    public int deleteNote(Integer id){
         SQLiteDatabase db = this.getWritableDatabase();
+        String parsedID = id + "";
+
+        return db.delete("notesPhotos", "id = ?", new String[]{parsedID});
+    }
+
+    public void editNote (int id, String color, String title, String noteContent) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String parsedID = id + "";
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("color", color);
         contentValues.put("title", title);
         contentValues.put("noteContent",noteContent );
-        contentValues.put("photopath", photopath);
 
-        db.update("notesPhotos",
-                contentValues,
-                "id = ? ",
-                new String[]{String.valueOf(id)});
+        db.update("notesPhotos", contentValues, "id = ? ", new String[]{parsedID});
         db.close();
-        return true;
+
     }
-
-    public void deleteNote(int id){
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.delete("notesPhotos",
-                "id = ? ",
-                new String[]{String.valueOf(id)});
-        db.close();
-    }
-
-
 
 
     @SuppressLint("Range")
@@ -87,7 +76,7 @@ import java.util.ArrayList;
         while(result.moveToNext()){
             Log.d("db", result.getColumnCount() + "");
             notes.add( new Note(
-                    1,
+                    result.getInt(result.getColumnIndex("id")),
                     result.getString(result.getColumnIndex("color")),
                     result.getString(result.getColumnIndex("title")),
                     result.getString(result.getColumnIndex("noteContent")),

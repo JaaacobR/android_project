@@ -6,9 +6,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,8 +22,6 @@ import com.example.jakubapp.NoteAdapter;
 import com.example.jakubapp.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class NotesActivity extends AppCompatActivity {
     private ListView lv;
@@ -34,9 +29,9 @@ public class NotesActivity extends AppCompatActivity {
     protected void refresh(){
         DatabaseManager db = new DatabaseManager (
                 NotesActivity.this, // activity z galerią zdjęć
-                "NotatkiJakubRyszka2.db", // nazwa bazy
+                "NotatkiJR.db", // nazwa bazy
                 null,
-                3 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
+                1 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
         );
         notes = db.getAll();
         NoteAdapter adapter = new NoteAdapter(
@@ -49,7 +44,11 @@ public class NotesActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
         db.close();
 
+
     }
+
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -67,26 +66,45 @@ public class NotesActivity extends AppCompatActivity {
         ActionBar actionBar =  getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("long", notes.get(i).getNoteContent());
                 AlertDialog.Builder alert = new AlertDialog.Builder(NotesActivity.this);
-                alert.setTitle("Wybierz opcje dla notatki!");
-                String[] opcje = {"edytuj","usun","sortuj wg tytyulu"};
-                alert.setItems(opcje, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // wyswietl opcje[which]);
-                        if(opcje[which]=="edytuj"){
-                            AlertDialog.Builder editAlert = new AlertDialog.Builder(NotesActivity.this);
-                            editAlert.setTitle("Edytuj notatke! ");
+                String[] options = {"Usuń" , "Edytuj"};
+                alert.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int j) {
+                        if(options[j] == "Usuń"){
+                            DatabaseManager db = new DatabaseManager (
+                                    NotesActivity.this, // activity z galerią zdjęć
+                                    "NotatkiJR.db", // nazwa bazy
+                                    null,
+                                    1 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
+                            );
+                            db.deleteNote(notes.get(i).getId());
+                            refresh();
+                        }else if(options[j] == "Edytuj"){
+                            android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(NotesActivity.this);
                             LinearLayout ll = new LinearLayout(NotesActivity.this);
+                            ll.setOrientation(LinearLayout.VERTICAL);
+
                             EditText title = new EditText(NotesActivity.this);
-                            EditText content = new EditText(NotesActivity.this);
                             title.setText(notes.get(i).getTitle());
-                            int[] selectedColor = new int[]{Color.parseColor("#"+notes.get(i).getColor())};
+
+                            EditText noteContent = new EditText(NotesActivity.this);
+                            noteContent.setText(notes.get(i).getNoteContent());
+
+                            ll.addView(title);
+                            ll.addView(noteContent);
+
+                            alert.setView(ll);
+
+
+                            final int[] selectedColor = {0xffeb2f58};
                             title.setTextColor(selectedColor[0]);
-                            content.setText(notes.get(i).getNoteContent());
+
+
                             int[] arr = new int[]{0xff0099ff, 0xffff5100, 0xffeb2f58, 0xffa841d1, 0xfff765d0, 0xff7fe3bd, 0xff2fa134, 0xff074f0a};
                             LinearLayout colors = new LinearLayout(NotesActivity.this);
                             colors.setOrientation(LinearLayout.HORIZONTAL);
@@ -95,9 +113,6 @@ public class NotesActivity extends AppCompatActivity {
                                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
                                 x.setLayoutParams(layoutParams);
                                 x.setBackgroundColor(i);
-
-
-                                ((GradientDrawable)x.getBackground()).setColor(i);
                                 colors.addView(x);
                                 x.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -108,64 +123,47 @@ public class NotesActivity extends AppCompatActivity {
                                 });
                             }
                             ll.addView(colors);
-                            ll.setOrientation(LinearLayout.VERTICAL);
-                            ll.addView(title);
-                            ll.addView(content);
-                            editAlert.setView(ll);
-                            editAlert.setPositiveButton("Zapisz", new DialogInterface.OnClickListener() {
+
+//ok
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    //wyświetl zmienną which
+
                                     DatabaseManager db = new DatabaseManager (
                                             NotesActivity.this, // activity z galerią zdjęć
-                                            "NotatkiJakubRyszka2.db", // nazwa bazy
+                                            "NotatkiJR.db", // nazwa bazy
                                             null,
-                                           3 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
+                                            1 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
                                     );
-                                    db.editNote(notes.get(i).getId(), Integer.toHexString(selectedColor[0]), title.getText().toString(), content.getText().toString(), notes.get(i).getPhotopath());
-                                    refresh();
-                                    db.close();
+
+                                    int color = selectedColor[0];
+
+
                                 }
+
                             });
-                            editAlert.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+
+//no
+                            alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     //wyświetl which
                                 }
                             });
-                            editAlert.show();
+//
+                            alert.show();
                         }
-                        else if(opcje[which]=="usun"){
-                            DatabaseManager db = new DatabaseManager (
-                                    NotesActivity.this,
-                                    "NotatkiJakubRyszka2.db",
-                                    null,
-                                    3
-                            );
-                            db.deleteNote(notes.get(i).getId());
-                            db.close();
-                            refresh();
-                        }
-                        else if(opcje[which]=="sortuj wg tytyulu"){
-                            Collections.sort(notes, new Comparator<Note>() {
-                                @Override
-                                public int compare(Note a, Note b) {
-                                    return a.getTitle().compareTo(b.getTitle());
-                                }
-                            });
-                            NoteAdapter adapter = new NoteAdapter(
-                                    NotesActivity.this,
-                                    R.layout.note_layout,
-                                    notes
-
-                            );
-                            lv = findViewById(R.id.lvnotes);
-                            lv.setAdapter(adapter);
-
-                        }
-
 
                     }
+
+
                 });
                 alert.show();
+                return false;
             }
         });
+
+
+
+
     }
 }

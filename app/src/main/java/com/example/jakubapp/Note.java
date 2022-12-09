@@ -1,12 +1,10 @@
 package com.example.jakubapp;
 
-import android.content.res.ColorStateList;
-
 public class Note {
     private String color, title, noteContent, photopath;
     private int id;
 
-    public Note(int id, String color, String title, String noteContent, String photopath) {
+    public Note(Integer id, String color, String title, String noteContent, String photopath) {
         this.id = id;
         this.color = color;
         this.title = title;

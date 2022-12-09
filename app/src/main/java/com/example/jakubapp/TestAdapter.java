@@ -108,9 +108,9 @@ public class TestAdapter extends ArrayAdapter {
 
                         DatabaseManager db = new DatabaseManager (
                                 _context, // activity z galerią zdjęć
-                                "NotatkiJakubRyszka2.db", // nazwa bazy
+                                "NotatkiJR.db", // nazwa bazy
                                 null,
-                                3 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
+                                1 //wersja bazy, po zmianie schematu bazy należy ją zwiększyć
                         );
 
                         int color = selectedColor[0];
