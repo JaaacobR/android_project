@@ -50,7 +50,7 @@ public class TestAdapter extends ArrayAdapter {
         iv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("XXX","usuniecie");
+
                 _list.get(position).delete();
                 _list.remove(position);
                 notifyDataSetChanged();

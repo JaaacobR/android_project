@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout albumsBtn;
     private RelativeLayout newAlbums;
     private RelativeLayout notes;
+    private RelativeLayout collage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
         albumsBtn = findViewById(R.id.albumsBtn);
         newAlbums = findViewById(R.id.newAlbums);
         notes = findViewById(R.id.notes);
+        collage = findViewById(R.id.collage);
+        collage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CollageActivity.class);
+                startActivity(intent);
+            }
+        });
         newAlbums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(requestCode == 200){
-            Log.d("qwerty", "asadfasfasdfasdf");
             if(resultCode == RESULT_OK){
                 Bundle extras = data.getExtras();
                 Bitmap b = (Bitmap) extras.get("data");
