@@ -1,5 +1,6 @@
 package com.example.jakubapp.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -42,13 +43,20 @@ public class CollageActivity extends AppCompatActivity {
                 imageDataArrayList.add(new ImageData(0,0,size.x/2,size.y));
                 imageDataArrayList.add(new ImageData(size.x/2,0, size.x/2, size.y/2));
                 imageDataArrayList.add(new ImageData(size.x/2, size.y/2, size.x/2, size.y/2));
-                Intent intent = new Intent(CollageActivity.this, CollageActivity.class);
+                Intent intent = new Intent(CollageActivity.this, CollageMakerActivity.class);
+                intent.putExtra("list", imageDataArrayList);
                 startActivity(intent);
 
             }
         });
 
 
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 }
