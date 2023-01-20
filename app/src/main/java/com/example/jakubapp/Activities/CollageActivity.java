@@ -2,7 +2,12 @@ package com.example.jakubapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.jakubapp.ImageData;
@@ -16,6 +21,8 @@ public class CollageActivity extends AppCompatActivity {
     private LinearLayout collageFirst;
     private LinearLayout collageSecond;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +31,24 @@ public class CollageActivity extends AppCompatActivity {
         collageFirst = findViewById(R.id.collageFirst);
         collageSecond = findViewById(R.id.collageSecond);
 
-        imageDataArrayList.add(new ImageData(0,0,100,100));
+        collageFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                Log.d("xxxx", size.x + " ; " + size.y);
+                imageDataArrayList.clear();
+                imageDataArrayList.add(new ImageData(0,0,size.x/2,size.y));
+                imageDataArrayList.add(new ImageData(size.x/2,0, size.x/2, size.y/2));
+                imageDataArrayList.add(new ImageData(size.x/2, size.y/2, size.x/2, size.y/2));
+                Intent intent = new Intent(CollageActivity.this, CollageActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
 
     }
 }
