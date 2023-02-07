@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class Image extends AppCompatActivity {
 
     private ImageView img;
@@ -39,6 +41,10 @@ public class Image extends AppCompatActivity {
                 Button bt1 = (Button) editView.findViewById(R.id.btnOK);
                 EditText et1 = (EditText) editView.findViewById(R.id.note1);
                 EditText et2 = (EditText) editView.findViewById(R.id.note2);
+
+                ArrayList<DrawerItem> list = new ArrayList<>();
+                list.add(new DrawerItem("upload"));
+                list.add(new DrawerItem("effects"));
 
                 bt1.setOnClickListener(new View.OnClickListener() {
                     @Override
