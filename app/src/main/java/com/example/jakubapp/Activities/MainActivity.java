@@ -1,5 +1,6 @@
-package com.example.jakubapp.Activities;
+package com.example.jakubapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,8 +20,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
-
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.jakubapp.R;
@@ -30,71 +31,73 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
-    private RelativeLayout cameraBtn;
-    private RelativeLayout albumsBtn;
-    private RelativeLayout newAlbums;
-    private RelativeLayout notes;
-    private RelativeLayout collage;
+    private LinearLayout cameraLayout;
+    private LinearLayout albumsLayout;
+    private LinearLayout collageLayout;
+    private LinearLayout networkLayout;
+    private LinearLayout newAlbumsLayout;
+    private LinearLayout notes;
+    File pic = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
+    public void checkPermission(String permission, int requestCode) {
+        // jeśli nie jest przyznane to zażądaj
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        } else {
+            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
+        checkPermission(Manifest.permission.CAMERA, 100);
+//        Log.d("xxx", DebugDB.getAddressLog());
+        //
+        //Log.d("xxx", String.valueOf(pic));
+        File dir = new File(pic, "RutkowskiFilip");
+        if(!dir.exists()) {
+            dir.mkdir();
+            Log.d("tutaj", "tutaj");
+            File dir1 = new File(dir, "miejsca");
+            File dir2 = new File(dir, "ludzie");
+            File dir3 = new File(dir, "rzeczy");
+            dir1.mkdir();
+            dir2.mkdir();
+            dir3.mkdir();
 
-
-        cameraBtn = findViewById(R.id.buttonCamera);
-        albumsBtn = findViewById(R.id.albumsBtn);
-        newAlbums = findViewById(R.id.newAlbums);
+        }else{
+            Log.d("tutaj", "tu");
+        }
+        cameraLayout = findViewById(R.id.camera);
+        albumsLayout = findViewById(R.id.albums);
+        collageLayout = findViewById(R.id.collage);
+        networkLayout = findViewById(R.id.network);
         notes = findViewById(R.id.notes);
-        collage = findViewById(R.id.collage);
-        collage.setOnClickListener(new View.OnClickListener() {
+        newAlbumsLayout = findViewById(R.id.newAlbums);
+        cameraLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CollageActivity.class);
-                startActivity(intent);
-            }
-        });
-        newAlbums.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Albums2Activity.class);
-                startActivity(intent);
-            }
-        });
-        albumsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this , AlbumsActivity.class);
-                startActivity(intent);
-            }
-        });
-        notes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this , NotesActivity.class);
-                startActivity(intent);
-            }
-        });
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle("Wybirz źródło zdjęcia!");
-                String[] opcje = {"Aparat" , "Galeria"};
-                alert.setItems(opcje, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(opcje[i] == "Aparat"){
+                alert.setTitle("Wybierz źródło zdjęcia:");
+
+                String[] options = {"Aparat","Galeria"};
+                alert.setItems(options, new DialogInterface.OnClickListener() {
+                    @SuppressLint("QueryPermissionsNeeded")
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("which", String.valueOf(which));
+                        if(which == 0){
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            if(intent.resolveActivity(getPackageManager()) != null){
-                                startActivityForResult(intent,200);
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                startActivityForResult(intent, 200);
                             }
                         }else{
                             Intent intent = new Intent(Intent.ACTION_PICK);
@@ -103,108 +106,136 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+//
                 alert.show();
-
+//                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+//                startActivity(intent);
             }
         });
-        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 100);
-        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
-
-        checkPermission(Manifest.permission.CAMERA, 100);
-
-
-
+        albumsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AlbumsActivity.class);
+                startActivity(intent);
+            }
+        });
+        collageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CollageActivity.class);
+                startActivity(intent);
+            }
+        });
+        networkLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,  NetworkActivity.class);
+                startActivity(intent);
+            }
+        });
+        newAlbumsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,  NewAlbumsActivity.class);
+                startActivity(intent);
+            }
+        });
+        notes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,  NotesActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-    public void checkPermission(String permission, int requestCode){
-        if(ContextCompat.checkSelfPermission(MainActivity.this,permission) == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //
+        switch (requestCode) {
+            case 100:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //tak
+                } else {
+                    //nie
+                }
+                break;
+            case 101 :
 
-        }else{
-            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
-
+                break;
         }
-    }
 
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File dir = new File(pic, "RyszkaJakub");
-        String[] opcje = new String[dir.listFiles().length];
-        for(int i=0; i< dir.listFiles().length; i++){
-            opcje[i] = dir.listFiles()[i].getName();
-        }
 
-        if(requestCode == 200){
-            if(resultCode == RESULT_OK){
-                Bundle extras = data.getExtras();
-                Bitmap b = (Bitmap) extras.get("data");
+            if (resultCode == RESULT_OK) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle("Wybierz folder do zapisu?");
-                alert.setItems(opcje, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                alert.setTitle("In which directory save photo?");
+
+                File dir = new File(pic, "RyszkaJakub");
+                File[] files = dir.listFiles() ;// tablica plików
+                String[] options = new String[files.length]; // ilość plików].{};
+                Arrays.sort(files); // sortowanie plików wg nazwy
+                for (int i=0; i< files.length;i++){
+                    options[i] = files[i].getName();
+                }
+
+                alert.setItems(options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("which", String.valueOf(which));
+                        Bitmap b;
+                        if(requestCode==200) {
+                            Bundle extras = data.getExtras();
+                             b = (Bitmap) extras.get("data");
+//                        ImageView iv = null;
+//                        iv.setImageBitmap(b);
+
+                        }else{
+                            Uri imgData = data.getData();
+                            InputStream stream = null;
+                            try {
+                                stream = getContentResolver().openInputStream(imgData);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                             b = BitmapFactory.decodeStream(stream);
+                        }
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+                        b.compress(Bitmap.CompressFormat.JPEG, 100, stream); // kompresja, typ pliku jpg, png
                         byte[] byteArray = stream.toByteArray();
+                        FileOutputStream fs = null;
                         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
                         String d = df.format(new Date());
-                        FileOutputStream fs = null;
                         try {
-                            fs = new FileOutputStream(dir.listFiles()[i].getPath() + "/" + d + ".jpg");
-                            fs.write(byteArray);
-                            fs.close();
-
+                            fs = new FileOutputStream(dir+"/"+files[which].getName()+"/"+d+".jpg");
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
+                        }
+                        try {
+                            fs.write(byteArray);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            fs.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+
                 });
+//
                 alert.show();
 
-            }
-        }else if(requestCode == 100){
-            if(resultCode == RESULT_OK){
-                Uri imgData = data.getData();
-                try {
-                    InputStream stream = getContentResolver().openInputStream(imgData);
-                    Bitmap b = BitmapFactory.decodeStream(stream);
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setTitle("Wybierz folder do zapisu?");
-                    alert.setItems(opcje, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            byte[] byteArray = stream.toByteArray();
-                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                            String d = df.format(new Date());
-                            FileOutputStream fs = null;
-                            try {
-                                fs = new FileOutputStream(dir.listFiles()[i].getPath() + "/" + d + ".jpg");
-                                fs.write(byteArray);
-                                fs.close();
-
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    alert.show();
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
 
             }
-        }
 
     }
 }

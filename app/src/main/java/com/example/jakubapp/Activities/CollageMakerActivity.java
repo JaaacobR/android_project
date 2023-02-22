@@ -1,15 +1,16 @@
-package com.example.jakubapp.Activities;
+package com.example.jakubapp.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -18,12 +19,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.example.jakubapp.ImageData;
 import com.example.jakubapp.R;
+import com.example.jakubapp.classes.ImageData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,157 +37,152 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class CollageMakerActivity extends AppCompatActivity {
+public class CollageMakerActivity extends Activity {
+    private ImageView selectedImageView;
 
-    private FrameLayout frameLayout;
-    private ImageView clickedImageView;
-    private ArrayList<ImageView> imgViewList;
-    private int index = 0;
-    protected ImageView flip;
-    protected ImageView rotate;
-    protected ImageView done;
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_collage_maker);
-
-        frameLayout = findViewById(R.id.frameLayout);
-        flip = findViewById(R.id.flip);
-        rotate = findViewById(R.id.rotate);
-        done = findViewById(R.id.done);
-        imgViewList = new ArrayList<>();
-
-        frameLayout.setDrawingCacheEnabled(true);
-
+        ImageButton rotate = findViewById(R.id.rotatePhoto);
+        ImageButton flip = findViewById(R.id.flipPhoto);
+        ImageButton save = findViewById(R.id.saveCollage);
         ArrayList<ImageData> list = (ArrayList<ImageData>) getIntent().getExtras().getSerializable("list");
-        for(int i=0; i< list.size(); i = i + 1){
-
+        //Log.d("lista", String.valueOf(list.get(1)));
+        FrameLayout layout = findViewById(R.id.collageFrameLayout);
+        for(ImageData i : list){
+            //Log.d("xxx", String.valueOf(i.getX())+i.getY());
             ImageView iv = new ImageView(CollageMakerActivity.this);
-            iv.setX(list.get(i).getX());
-            iv.setY(list.get(i).getY());
-            iv.setImageResource(R.drawable.baseline_photo_camera_white_36);
-            iv.setLayoutParams(new FrameLayout.LayoutParams(list.get(i).getW(),list.get(i).getH()));
-            int finalI = i;
+            iv.setX(i.getX());
+            iv.setY(i.getY());
+//            iv.setBackgroundColor(Color.rgb(255,255,255));
+            iv.setLayoutParams(new FrameLayout.LayoutParams(i.getW(), i.getH()));
+            iv.setImageResource(R.drawable.baseline_photo_camera_white_48);
+            iv.setBackgroundColor(Color.rgb(33,33,33));
+            iv.setPadding(100,100,100,100);
+            iv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    clickedImageView = iv;
-                    index = finalI;
+                    selectedImageView = iv;
+                }
+            });
+            iv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(CollageMakerActivity.this);
-                    alert.setTitle("Wybirz źródło zdjęcia!");
-                    String[] opcje = {"Aparat" , "Galeria"};
-                    alert.setItems(opcje, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(opcje[i] == "Aparat"){
+                    alert.setTitle("Select photo source:");
+                    selectedImageView = iv;
+                    String[] options = {"Camera","Gallery"};
+                    alert.setItems(options, new DialogInterface.OnClickListener() {
+                        @SuppressLint("QueryPermissionsNeeded")
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d("which", String.valueOf(which));
+                            if(which == 0){
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                if(intent.resolveActivity(getPackageManager()) != null){
-                                    startActivityForResult(intent,200);
+
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    startActivityForResult(intent, 200);
                                 }
+
                             }else{
                                 Intent intent = new Intent(Intent.ACTION_PICK);
                                 intent.setType("image/*");
                                 startActivityForResult(intent, 100);
                             }
                         }
+
+
                     });
+//
                     alert.show();
+
+
+
+                    return true;
                 }
             });
-            imgViewList.add(iv);
-            frameLayout.addView(iv);
+            layout.addView(iv);
         }
+        Matrix matrix = new Matrix();
 
         rotate.setOnClickListener(v->{
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            Bitmap oryginal = ((BitmapDrawable) clickedImageView.getDrawable()).getBitmap();
+            Log.d("klik", "rotate");
+            matrix.postRotate(-90);
 
 
+            Bitmap oryginal = ((BitmapDrawable) selectedImageView.getDrawable()).getBitmap();
             Bitmap rotated = Bitmap.createBitmap(oryginal, 0, 0, oryginal.getWidth(), oryginal.getHeight(), matrix, true);
 
-            clickedImageView.setImageBitmap(rotated);
+            selectedImageView.setImageBitmap(rotated);
+            matrix.reset();
         });
-
         flip.setOnClickListener(v->{
-            if(clickedImageView != null){
-                Matrix matrix = new Matrix();
-                matrix.postScale(-1.0f, 1.0f);
-                Bitmap oryginal = ((BitmapDrawable) clickedImageView.getDrawable()).getBitmap();
+            Log.d("klik", "flip");
+            matrix.postScale(-1.0f, 1.0f);
+            Bitmap oryginal = ((BitmapDrawable) selectedImageView.getDrawable()).getBitmap();
+            Bitmap rotated = Bitmap.createBitmap(oryginal, 0, 0, oryginal.getWidth(), oryginal.getHeight(), matrix, true);
 
-
-                Bitmap rotated = Bitmap.createBitmap(oryginal, 0, 0, oryginal.getWidth(), oryginal.getHeight(), matrix, true);
-
-                clickedImageView.setImageBitmap(rotated);
-            }
+            selectedImageView.setImageBitmap(rotated);
+            matrix.reset();
         });
-
-
-        done.setOnClickListener(v->{
-            Bitmap b = frameLayout.getDrawingCache(true);
-
-
-            File pic = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES );
+        save.setOnClickListener(v->{
+            layout.setDrawingCacheEnabled(true);
+            Bitmap b = layout.getDrawingCache(true);
+            File pic = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
             File dir = new File(pic, "RyszkaJakub");
-            dir.mkdir();
-
-            File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "RyszkaJakub");
-
-            File collages = new File(folder, "collages");
-            collages.mkdir();
-
-
-
-
+            File collages = new File(dir, "collages");
+            if(!collages.exists()) {
+                collages.mkdir();
+            }
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             b.compress(Bitmap.CompressFormat.JPEG, 100, stream); // kompresja, typ pliku jpg, png
             byte[] byteArray = stream.toByteArray();
-
-
             FileOutputStream fs = null;
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            String d = df.format(new Date());
             try {
-                SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                String d = df.format(new Date());
-                fs = new FileOutputStream(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "RyszkaJakub" + File.separator + "collages"+ File.separator+d+".jpg");
-                fs.write(byteArray);
-                fs.close();
+                fs = new FileOutputStream(collages+"/"+d+".jpg");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }
+            try {
+                fs.write(byteArray);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
+            try {
+                fs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(CollageMakerActivity.this ,MainActivity.class);
+            startActivity(intent);
         });
-
-
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File dir = new File(pic, "RyszkaJakub");
-        String[] opcje = new String[dir.listFiles().length];
+        String[] options = new String[dir.listFiles().length];
         for(int i=0; i< dir.listFiles().length; i++){
-            opcje[i] = dir.listFiles()[i].getName();
+            options[i] = dir.listFiles()[i].getName();
         }
 
         if(requestCode == 200){
+
             if(resultCode == RESULT_OK){
-                Uri imgData = data.getData();
+
                 try {
-                    InputStream stream = getContentResolver().openInputStream(imgData);
-                    Bitmap b = BitmapFactory.decodeStream(stream);
-                    clickedImageView.setImageBitmap(b);
-                    clickedImageView.setPadding(0, 0, 0, 0);
-                    clickedImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                    Bitmap b = (Bitmap) data.getExtras().get("data");
+                    selectedImageView.setImageBitmap(b);
+                    selectedImageView.setPadding(0, 0, 0, 0);
+                    selectedImageView.setBackgroundColor(Color.rgb(255,255,255));
+                    selectedImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 }catch(Exception x){
 
                 }
@@ -196,9 +193,9 @@ public class CollageMakerActivity extends AppCompatActivity {
                 try {
                     InputStream stream = getContentResolver().openInputStream(imgData);
                     Bitmap b = BitmapFactory.decodeStream(stream);
-                    clickedImageView.setImageBitmap(b);
-                    clickedImageView.setPadding(0, 0, 0, 0);
-                    clickedImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    selectedImageView.setImageBitmap(b);
+                    selectedImageView.setPadding(0, 0, 0, 0);
+                    selectedImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 }catch(Exception x){
 
                 }
@@ -207,5 +204,6 @@ public class CollageMakerActivity extends AppCompatActivity {
         }
 
     }
+
 
 }

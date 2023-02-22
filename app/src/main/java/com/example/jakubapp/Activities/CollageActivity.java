@@ -1,6 +1,7 @@
-package com.example.jakubapp.Activities;
+package com.example.jakubapp.activities;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,55 +9,79 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 
-import com.example.jakubapp.ImageData;
 import com.example.jakubapp.R;
+import com.example.jakubapp.classes.ImageData;
 
 import java.util.ArrayList;
 
 public class CollageActivity extends AppCompatActivity {
 
-    private ArrayList<ImageData> imageDataArrayList = new ArrayList<>();
-    private LinearLayout collageFirst;
-    private LinearLayout collageSecond;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collage);
+        setContentView(R.layout.activity_collage_screen);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null) actionBar.setDisplayHomeAsUpEnabled(true);
 
-        collageFirst = findViewById(R.id.collageFirst);
-        collageSecond = findViewById(R.id.collageSecond);
-
-        collageFirst.setOnClickListener(new View.OnClickListener() {
+        ArrayList<ImageData> list = new ArrayList<>();
+        ImageView first = findViewById(R.id.firstCollage);
+        ImageView second = findViewById(R.id.secondCollage);
+        ImageView third = findViewById(R.id.thirdCollage);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        Log.d("xxx","szerokość ekranu " + size.x);
+        Log.d("xxx","wysokość ekranu " +size.y);
+        int width = size.x;
+        int height = size.y;
+        first.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                Log.d("xxxx", size.x + " ; " + size.y);
-                imageDataArrayList.clear();
-                imageDataArrayList.add(new ImageData(0,0,size.x/2,size.y));
-                imageDataArrayList.add(new ImageData(size.x/2,0, size.x/2, size.y/2));
-                imageDataArrayList.add(new ImageData(size.x/2, size.y/2, size.x/2, size.y/2));
+                list.add(new ImageData(0,0, width,(height-100)/2));
+                list.add(new ImageData(0,(height-100)/2,width/2,(height-100)/2));
+                list.add(new ImageData(width/2,(height-100)/2,width/2,(height-100)/2));
                 Intent intent = new Intent(CollageActivity.this, CollageMakerActivity.class);
-                intent.putExtra("list", imageDataArrayList);
+                intent.putExtra("list", list);
+                startActivity(intent);
+
+            }
+        });
+        second.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                list.add(new ImageData(0,0,width/3,(height-100)));
+                list.add(new ImageData(width/3,0,width/3,(height-100)));
+                list.add(new ImageData(width/3*2,0,width/3,(height-100)));
+                Intent intent = new Intent(CollageActivity.this, CollageMakerActivity.class);
+                intent.putExtra("list", list);
+                startActivity(intent);
+            }
+        });
+        third.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                list.add(new ImageData(0,0,width/2,(height-100)/2));
+                list.add(new ImageData(0,(height-100)/2,width/2,(height-100)/2));
+                list.add(new ImageData(width/2,0,width/2,(height-100)));
+                Intent intent = new Intent(CollageActivity.this, CollageMakerActivity.class);
+                intent.putExtra("list", list);
                 startActivity(intent);
 
             }
         });
 
 
-
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
