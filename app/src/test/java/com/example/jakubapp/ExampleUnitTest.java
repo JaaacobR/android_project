@@ -1,4 +1,4 @@
-package com.example.jakubapp;
+package com.example.arkadiuszapp001;
 
 import org.junit.Test;
 

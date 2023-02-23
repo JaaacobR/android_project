@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="layoutcolor">#242423</color>
+    <color name="editphototab">#99595959</color>
+    <color name="bordercolor">#e3e3e3</color>
+    <color name="recyclercolor1">#ff14e0</color>
+    <color name="recyclercolor2">#00BCD4</color>
 </resources>
