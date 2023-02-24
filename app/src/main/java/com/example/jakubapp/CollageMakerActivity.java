@@ -79,7 +79,7 @@ public class CollageMakerActivity extends AppCompatActivity {
             File dir = new File(pic, "RyszkaJakub");
             dir.mkdir();
 
-            File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "ArkadiuszWojdyla");
+            File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "RyszkaJakub");
 
             File collages = new File(folder, "collages");
             collages.mkdir();
