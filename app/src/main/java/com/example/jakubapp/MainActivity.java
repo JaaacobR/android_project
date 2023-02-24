@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             File dir = new File(pic, "RyszkaJakub");
             dir.mkdir();
-            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "ArkadiuszWojdyla");
+            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "RyszkaJakub");
             File miejsca = new File(folder, "miejsca");
             File ludzie = new File(folder, "ludzie");
             File rzeczy = new File(folder, "rzeczy");
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     File dir = new File(pic, "RyszkaJakub");
                     dir.mkdir();
 
-                    File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "ArkadiuszWojdyla");
+                    File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "RyszkaJakub");
                     File miejsca = new File(folder, "miejsca");
                     miejsca.mkdir();
 
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
-                File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "ArkadiuszWojdyla");
+                File folder = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ) + File.separator + "RyszkaJakub");
                 File[] files = folder.listFiles();
                 for (File file : folder.listFiles()){
                     Button bt = new Button(MainActivity.this);
@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
                                 finalB.compress(Bitmap.CompressFormat.JPEG, 100, stream); // kompresja, typ pliku jpg, png
                                 byte[] byteArray = stream.toByteArray();
                                 FileOutputStream fs = null;
-                                fs = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)  + File.separator + "ArkadiuszWojdyla" + File.separator+ file.getName() + File.separator + filename);
+                                fs = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)  + File.separator + "RyszkaJakub" + File.separator+ file.getName() + File.separator + filename);
                                 fs.write(byteArray);
                                 fs.close();
                                 folderDialog.dismiss();
